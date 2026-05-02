@@ -9,21 +9,21 @@
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 [P] Create the feature documentation structure in specs/001-plataforma-inversiones-ia/plan.md, research.md, data-model.md, quickstart.md, and contracts/ (PL-001)
-- [ ] T002 [P] Initialize the backend and frontend project skeletons in backend/ and frontend/ with the directory layout defined in plan.md (PL-002)
-- [ ] T003 [P] Create `.env.example` and backend configuration loader in backend/src/config/ to support Supabase, MongoDB, broker credentials, Claude API, JWT, and rate limiting (PL-003)
-- [ ] T004 [P] Update specs/001-plataforma-inversiones-ia/checklists/requirements.md and checklists/feature-validation.md with the current FR/SC/PL traceability and the new contract files (PL-004)
+- [x] T001 [P] Create the feature documentation structure in specs/001-plataforma-inversiones-ia/plan.md, research.md, data-model.md, quickstart.md, and contracts/ (PL-001)
+- [x] T002 [P] Initialize the backend and frontend project skeletons in backend/ and frontend/ with the directory layout defined in plan.md (PL-002)
+- [x] T003 [P] Create `.env.example` and backend configuration loader in backend/src/config/ to support Supabase, MongoDB, broker credentials, Claude API, JWT, and rate limiting (PL-003)
+- [x] T004 [P] Update specs/001-plataforma-inversiones-ia/checklists/requirements.md and checklists/feature-validation.md with the current FR/SC/PL traceability and the new contract files (PL-004)
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-- [ ] T005 [P] Implement JWT bearer authentication middleware in backend/src/middleware/auth.ts with validation for `Authorization: Bearer <JWT>` and error codes `401 AUTH_CONTEXT_MISSING`, `401 AUTH_CONTEXT_INVALID_TOKEN`, `404 AUTH_CONTEXT_USER_NOT_FOUND`, `403 AUTH_CONTEXT_USER_INACTIVE` (PL-005) [FR-006]
-- [ ] T006 [P] Implement the broker adapter abstraction in backend/src/adapters/broker-adapter.ts, plus broker-specific stubs in backend/src/adapters/ibkr-adapter.ts and backend/src/adapters/alpaca-adapter.ts, ensuring broker logic is decoupled from order and signal services (PL-006) [FR-007]
-- [ ] T007 [P] Implement rate limiting middleware in backend/src/middleware/rate-limit.ts and configure an SLO for request throughput and rejection handling, including logged metrics for rate limit events (PL-007) [SC-006]
-- [ ] T008 [P] Implement observability infrastructure in backend/src/services/observability.ts and backend/src/middleware/logging.ts to emit request/tracing/audit logs and support the SC-006 observability requirement (PL-008) [SC-006]
-- [ ] T009 Implement the order model with optimistic concurrency versioning in backend/src/models/order.ts and order persistence code in backend/src/services/order-service.ts, including the `409 ORDER_VERSION_STALE` response path (PL-009) [FR-013]
-- [ ] T010 Implement the signal lifecycle model in backend/src/models/signal.ts and persist signal explainability fields in backend/src/services/signal-service.ts, including rationale, sourceCores, confidence, createdAt, and expiresAt (PL-010) [FR-008]
+- [x] T005 [P] Implement JWT bearer authentication middleware in backend/src/middleware/auth.ts with validation for `Authorization: Bearer <JWT>` and error codes `401 AUTH_CONTEXT_MISSING`, `401 AUTH_CONTEXT_INVALID_TOKEN`, `404 AUTH_CONTEXT_USER_NOT_FOUND`, `403 AUTH_CONTEXT_USER_INACTIVE` (PL-005) [FR-006]
+- [x] T006 [P] Implement the broker adapter abstraction in backend/src/adapters/broker-adapter.ts, plus broker-specific stubs in backend/src/adapters/ibkr-adapter.ts and backend/src/adapters/alpaca-adapter.ts, ensuring broker logic is decoupled from order and signal services (PL-006) [FR-007]
+- [x] T007 [P] Implement rate limiting middleware in backend/src/middleware/rate-limit.ts and configure an SLO for request throughput and rejection handling, including logged metrics for rate limit events (PL-007) [SC-006]
+- [x] T008 [P] Implement observability infrastructure in backend/src/services/observability.ts and backend/src/middleware/logging.ts to emit request/tracing/audit logs and support the SC-006 observability requirement (PL-008) [SC-006]
+- [x] T009 Implement the order model with optimistic concurrency versioning in backend/src/models/order.ts and order persistence code in backend/src/services/order-service.ts, including the `409 ORDER_VERSION_STALE` response path (PL-009) [FR-013]
+- [x] T010 Implement the signal lifecycle model in backend/src/models/signal.ts and persist signal explainability fields in backend/src/services/signal-service.ts, including rationale, sourceCores, confidence, createdAt, and expiresAt (PL-010) [FR-008]
 
 ---
 
@@ -33,8 +33,8 @@
 
 **Independent Test**: Submit a signal-driven order, approve it manually, simulate a broker failure, verify the order becomes `failed`, and confirm a retry requires a new manual approval.
 
-- [ ] T011 [US1] Implement order submission and approval endpoints in backend/src/routes/order-routes.ts and backend/src/controllers/order-controller.ts, ensuring the order creation starts as `pending_approval` and requires explicit approval before broker submission (PL-011) [FR-009]
-- [ ] T012 [US1] Implement broker failure recovery logic in backend/src/services/broker-service.ts and backend/src/services/order-service.ts so that broker timeouts and rejections mark orders as `failed` and require a new manual approval for retry (PL-012) [FR-009]
+- [x] T011 [US1] Implement order submission and approval endpoints in backend/src/routes/order-routes.ts and backend/src/controllers/order-controller.ts, ensuring the order creation starts as `pending_approval` and requires explicit approval before broker submission (PL-011) [FR-009]
+- [x] T012 [US1] Implement broker failure recovery logic in backend/src/services/broker-service.ts and backend/src/services/order-service.ts so that broker timeouts and rejections mark orders as `failed` and require a new manual approval for retry (PL-012) [FR-009]
 
 ---
 
