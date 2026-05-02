@@ -77,8 +77,8 @@ export class OrderService {
       observability.logAudit('order_submitted', { orderId, broker: result.broker });
     } else {
       order.status = 'failed';
-      order.failedReason = result.reason;
-      observability.logBrokerFailure(orderId, result.reason);
+      order.failedReason = result.reason || 'Unknown error';
+      observability.logBrokerFailure(orderId, result.reason || 'Unknown error');
     }
 
     return order;
