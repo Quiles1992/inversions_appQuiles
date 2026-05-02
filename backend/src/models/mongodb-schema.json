@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MongoDB Collections Schema for Investment Platform",
+  "description": "Optional MongoDB collections for historical signal traces, AI reasoning, and performance optimization",
+  "collections": {
+    "ai_reasoning": {
+      "description": "Optional collection for storing AI reasoning details and model explanations for signals",
+      "bsonType": "object",
+      "required": ["_id", "signalId", "modelName", "createdAt"],
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "MongoDB document ID"
+        },
+        "signalId": {
+          "bsonType": "string",
+          "description": "UUID reference to signal in Supabase"
+        },
+        "modelName": {
+          "bsonType": "string",
+          "enum": ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"],
+          "description": "AI model used for signal generation"
+        },
+        "confidenceScore": {
+          "bsonType": "double",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Raw confidence score from AI model before normalization"
+        },
+        "explanation": {
+          "bsonType": "string",
+          "description": "Detailed explanation of reasoning from AI model"
+        },
+        "inputContext": {
+          "bsonType": "object",
+          "description": "Context data provided to AI model (market data, news, indicators)"
+        },
+        "generationTimeMs": {
+          "bsonType": "int",
+          "description": "Time taken by AI model to generate signal in milliseconds"
+        },
+        "tokenUsage": {
+          "bsonType": "object",
+          "properties": {
+            "inputTokens": {
+              "bsonType": "int"
+            },
+            "outputTokens": {
+              "bsonType": "int"
+            }
+          },
+          "description": "Token usage statistics for API billing"
+        },
+        "createdAt": {
+          "bsonType": "date",
+          "description": "Timestamp of AI reasoning generation"
+        }
+      }
+    },
+    "signal_history": {
+      "description": "Optional collection for historical signal traces and archived signal data",
+      "bsonType": "object",
+      "required": ["_id", "signalId", "archivedAt"],
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "MongoDB document ID"
+        },
+        "signalId": {
+          "bsonType": "string",
+          "description": "UUID reference to signal in Supabase"
+        },
+        "accountId": {
+          "bsonType": "string",
+          "description": "Account ID for historical tracking"
+        },
+        "symbol": {
+          "bsonType": "string",
+          "description": "Trading symbol (e.g., AAPL, GOOGL)"
+        },
+        "action": {
+          "bsonType": "string",
+          "enum": ["BUY", "SELL", "HOLD"],
+          "description": "Recommended action"
+        },
+        "confidence": {
+          "bsonType": "double",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Signal confidence level"
+        },
+        "sourceCores": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "string"
+          },
+          "description": "Source cores that converged on this signal"
+        },
+        "rationale": {
+          "bsonType": "string",
+          "description": "Explanation of signal rationale"
+        },
+        "createdAt": {
+          "bsonType": "date",
+          "description": "Original signal creation timestamp"
+        },
+        "expiresAt": {
+          "bsonType": "date",
+          "description": "Signal expiration timestamp"
+        },
+        "archivedAt": {
+          "bsonType": "date",
+          "description": "Timestamp when signal was archived"
+        },
+        "archiveReason": {
+          "bsonType": "string",
+          "enum": ["EXPIRED", "MANUAL", "SUPERSEDED"],
+          "description": "Reason for archival"
+        },
+        "relatedOrders": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "string"
+          },
+          "description": "Order IDs that were created from this signal"
+        },
+        "performance": {
+          "bsonType": "object",
+          "properties": {
+            "orderExecutionPrice": {
+              "bsonType": "double"
+            },
+            "currentPrice": {
+              "bsonType": "double"
+            },
+            "percentGainLoss": {
+              "bsonType": "double"
+            },
+            "measuredAt": {
+              "bsonType": "date"
+            }
+          },
+          "description": "Optional post-execution performance tracking"
+        }
+      }
+    },
+    "broker_interactions": {
+      "description": "Optional collection for detailed broker interaction logs and debugging",
+      "bsonType": "object",
+      "required": ["_id", "orderId", "broker", "createdAt"],
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "MongoDB document ID"
+        },
+        "orderId": {
+          "bsonType": "string",
+          "description": "UUID reference to order in Supabase"
+        },
+        "broker": {
+          "bsonType": "string",
+          "enum": ["ibkr", "alpaca"],
+          "description": "Broker identifier"
+        },
+        "eventType": {
+          "bsonType": "string",
+          "enum": ["submission", "execution", "rejection", "timeout", "modification", "cancellation"],
+          "description": "Type of broker interaction"
+        },
+        "requestPayload": {
+          "bsonType": "object",
+          "description": "Full request sent to broker"
+        },
+        "responsePayload": {
+          "bsonType": "object",
+          "description": "Full response received from broker"
+        },
+        "success": {
+          "bsonType": "bool",
+          "description": "Whether the broker interaction succeeded"
+        },
+        "errorCode": {
+          "bsonType": "string",
+          "description": "Broker error code if applicable"
+        },
+        "errorMessage": {
+          "bsonType": "string",
+          "description": "Broker error message if applicable"
+        },
+        "retryCount": {
+          "bsonType": "int",
+          "description": "Number of retries attempted"
+        },
+        "executionTimeMs": {
+          "bsonType": "int",
+          "description": "Time taken for broker to respond in milliseconds"
+        },
+        "createdAt": {
+          "bsonType": "date",
+          "description": "Timestamp of interaction"
+        }
+      }
+    },
+    "performance_logs": {
+      "description": "Optional collection for performance metrics and latency tracking for SLO monitoring",
+      "bsonType": "object",
+      "required": ["_id", "endpoint", "createdAt"],
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "MongoDB document ID"
+        },
+        "endpoint": {
+          "bsonType": "string",
+          "description": "API endpoint (e.g., /orders, /signals)"
+        },
+        "method": {
+          "bsonType": "string",
+          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+          "description": "HTTP method"
+        },
+        "statusCode": {
+          "bsonType": "int",
+          "description": "HTTP response status code"
+        },
+        "latencyMs": {
+          "bsonType": "int",
+          "description": "Request latency in milliseconds"
+        },
+        "userId": {
+          "bsonType": "string",
+          "description": "User ID for tracking per-user metrics"
+        },
+        "requestSize": {
+          "bsonType": "int",
+          "description": "Request body size in bytes"
+        },
+        "responseSize": {
+          "bsonType": "int",
+          "description": "Response body size in bytes"
+        },
+        "cacheHit": {
+          "bsonType": "bool",
+          "description": "Whether response was served from cache"
+        },
+        "createdAt": {
+          "bsonType": "date",
+          "description": "Timestamp of API call"
+        }
+      }
+    }
+  },
+  "indexes": {
+    "ai_reasoning": [
+      {
+        "keys": { "signalId": 1 },
+        "unique": false,
+        "description": "Find all AI reasoning for a signal"
+      },
+      {
+        "keys": { "modelName": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find recent reasoning by model"
+      }
+    ],
+    "signal_history": [
+      {
+        "keys": { "signalId": 1 },
+        "unique": true,
+        "description": "One-to-one mapping from signalId to history"
+      },
+      {
+        "keys": { "accountId": 1, "archivedAt": -1 },
+        "unique": false,
+        "description": "Find archived signals for account"
+      },
+      {
+        "keys": { "symbol": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find signals by symbol over time"
+      }
+    ],
+    "broker_interactions": [
+      {
+        "keys": { "orderId": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find all interactions for an order"
+      },
+      {
+        "keys": { "broker": 1, "eventType": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find interactions by broker and event type"
+      }
+    ],
+    "performance_logs": [
+      {
+        "keys": { "endpoint": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find recent performance metrics by endpoint"
+      },
+      {
+        "keys": { "userId": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find performance metrics per user"
+      },
+      {
+        "keys": { "statusCode": 1, "createdAt": -1 },
+        "unique": false,
+        "description": "Find errors and status codes over time"
+      }
+    ]
+  },
+  "notes": {
+    "retention": "All MongoDB collections should implement TTL indexes to expire documents after 365 days per compliance requirements.",
+    "replication": "Recommended: MongoDB replica set with at least 3 nodes for high availability.",
+    "backup": "Daily backups recommended. Critical for audit trail and compliance verification.",
+    "consistency": "Eventual consistency acceptable for historical and performance data. Strong consistency maintained in Supabase for transactional data."
+  }
+}
