@@ -101,6 +101,26 @@ Cada core representa una fuente de verdad explicable.
 
 ---
 
+## REQUERIMIENTOS FUNCIONALES, CRITERIOS Y CONTRATOS
+
+### Requerimientos funcionales clave
+- FR-006: Autenticación JWT Bearer para todas las rutas protegidas.
+- FR-007: Broker adapter desacoplado que abstrae IBKR y Alpaca.
+- FR-008: Persistencia de ciclo de vida de señales con metadata explicable.
+- FR-009: Flujo de aprobación manual para órdenes y recuperación de fallas de broker.
+- FR-013: Concurrencia optimista en órdenes con respuesta `409 ORDER_VERSION_STALE`.
+
+### Criterios de calidad y no funcionales
+- SC-006: Observabilidad y rate limiting con métricas, logs de auditoría y trazabilidad.
+
+### Mapeo de contratos
+- `contracts/auth-context.md`: define la autenticación JWT, los encabezados y los códigos de error obligatorios.
+- `contracts/broker-adapter.md`: define la abstracción de broker, las operaciones de orden y el manejo de fallas.
+- `contracts/signal-lifecycle.md`: define la persistencia de señales, su explicabilidad, estado y expiración.
+- `specs/001-plataforma-inversiones-ia/plan.md`: mapea las actividades de planeación (PL-001..PL-012) con las tareas y los artefactos de implementación.
+
+---
+
 ## 5. STACK TECNOLÓGICO OBLIGATORIO
 
 ### PWA
@@ -122,7 +142,7 @@ Cada core representa una fuente de verdad explicable.
 
 ---
 
-## 6. BACKEND REST API — RESPONSABILIDADES
+## 6. BACKEND REST API — RESPONSABILIDADES [REQ-BACKEND]
 
 - Conectividad con brokers
 - Sincronización de portafolio
@@ -130,23 +150,35 @@ Cada core representa una fuente de verdad explicable.
 - Ingesta de market data
 - Ejecución asistida
 - Seguridad y observabilidad
+- Marcar la orden como `failed` si el broker rechaza o expira la conexión
+- Exigir nueva aprobación manual antes de reintentar órdenes fallidas
+- Conservar evidencia de fallo y trazabilidad en logs
 
 ---
 
-## 7. AUTH CONTEXT (FASE TRANSICIONAL)
+## 7. AUTH CONTEXT (V1 OFICIAL) [FR-006]
 
 Header requerido:
-- x-user-id: UUID
+- Authorization: Bearer <JWT>
 
 Reglas de validación:
 - 401 AUTH_CONTEXT_MISSING
-- 400 AUTH_CONTEXT_INVALID_UUID
+- 401 AUTH_CONTEXT_INVALID_TOKEN
 - 404 AUTH_CONTEXT_USER_NOT_FOUND
 - 403 AUTH_CONTEXT_USER_INACTIVE
 
+Notas:
+- En v1, el mecanismo oficial es JWT bearer auth.
+- Los clientes deben presentar el token en cada petición autenticada.
+- Este requisito se valida como FR-006 en el plan de implementación y en `contracts/auth-context.md`.
+
+Notas:
+- En v1, el mecanismo oficial es JWT bearer auth.
+- Los clientes deben presentar el token en cada petición autenticada.
+
 ---
 
-## 8. DATA MODEL
+## 8. DATA MODEL [REQ-DATA]
 
 - User: id (UUID), email (string), name (string)
 - Account: id (UUID), user_id (UUID), broker (string)
@@ -154,7 +186,7 @@ Reglas de validación:
 - Order: id (UUID), type (string), status (string)
 - Signal: id (UUID), symbol (string), action (string), confidence (float)
 
-## 9. PERSISTENCIA DE DATOS
+## 9. PERSISTENCIA DE DATOS [REQ-PERSISTENCIA]
 
 Fuentes:
 - Supabase: usuarios, cuentas, posiciones, órdenes
@@ -201,13 +233,18 @@ Picoro → (Goku ∥ Krilin) → (Vegeta ∥ Bulma) → Dr.FIC
 
 ## 12. CRITERIOS DE ACEPTACIÓN GLOBALES
 
-- Respeto total a la Constitución
-- IA no ejecuta operaciones
-- Señales explicables
-- Brokers desacoplados
-- Credenciales solo en .env
-- Evidencia funcional por ticket
-- Logs y trazabilidad activos
+- FR-006: Todas las rutas protegidas validan JWT bearer y retornan los códigos de error especificados.
+- FR-007: La lógica de brokers está desacoplada y es intercambiable entre IBKR y Alpaca.
+- FR-008: Cada señal persistida incluye `confidence`, `rationale`, `sourceCores`, `createdAt` y `expiresAt`.
+- FR-009: Órdenes fallidas por broker se marcan como `failed` y requieren una nueva aprobación manual antes de reintentar.
+- FR-013: Las actualizaciones de orden con versión obsoleta devuelven `409 ORDER_VERSION_STALE`.
+- SC-006: El sistema registra eventos de tasa, auditoría y trazabilidad para requests protegidos.
+- PL-001..PL-012: La planificación, los contratos y las tareas están mapeados y verificables a través de los artefactos de `plan.md`, `tasks.md` y `contracts/`.
+- Respeto total a la Constitución.
+- IA no ejecuta operaciones.
+- Credenciales solo en `.env`.
+- Evidencia funcional por ticket.
+- Logs y trazabilidad activos.
 
 ---
 
