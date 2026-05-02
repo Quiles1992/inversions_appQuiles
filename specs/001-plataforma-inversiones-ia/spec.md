@@ -24,6 +24,17 @@ Ante cualquier conflicto, prevalece constitution.md.
 
 ---
 
+## Clarifications
+
+### Session 2026-05-02
+
+- Q: What are the main data entities in the platform? → A: User, Account, Position, Order, Signal
+- Q: What are the key attributes for the User entity? → A: id (UUID), email (string), name (string)
+- Q: What are the key attributes for the Account entity? → A: id (UUID), user_id (UUID), broker (string)
+- Q: What are the key attributes for the Position entity? → A: symbol (string), quantity (float), avg_price (float)
+- Q: What are the key attributes for the Order entity? → A: id (UUID), type (string), status (string)
+- Q: What are the key attributes for the Signal entity? → A: id (UUID), symbol (string), action (string), confidence (float)
+
 ## 1. OBJETIVO GENERAL
 
 Diseñar, construir y operar una Plataforma Web Profesional de Inversiones asistida por Inteligencia Artificial, enfocada en acciones y opciones del mercado estadounidense, que:
@@ -135,7 +146,13 @@ Reglas de validación:
 
 ---
 
----
+## 8. DATA MODEL
+
+- User: id (UUID), email (string), name (string)
+- Account: id (UUID), user_id (UUID), broker (string)
+- Position: symbol (string), quantity (float), avg_price (float)
+- Order: id (UUID), type (string), status (string)
+- Signal: id (UUID), symbol (string), action (string), confidence (float)
 
 ## 9. PERSISTENCIA DE DATOS
 
