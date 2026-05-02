@@ -51,9 +51,9 @@
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T015 [P] Add database migration or schema definition files in backend/src/models/ with Supabase and MongoDB persistence details, based on specs/001-plataforma-inversiones-ia/data-model.md (PL-001)
-- [ ] T016 [P] Add backend contract tests or documentation checks in specs/001-plataforma-inversiones-ia/contracts/ to validate auth, broker adapter, signal lifecycle, and order recovery behavior (PL-004)
-- [ ] T017 [P] Add SLO documentation in specs/001-plataforma-inversiones-ia/plan.md and backend/src/config/README explaining rate limiting thresholds, availability goals, and recovery expectations (PL-007)
+- [x] T015 [P] Add database migration or schema definition files in backend/src/models/ with Supabase and MongoDB persistence details, based on specs/001-plataforma-inversiones-ia/data-model.md (PL-001)
+- [x] T016 [P] Add backend contract tests or documentation checks in specs/001-plataforma-inversiones-ia/contracts/ to validate auth, broker adapter, signal lifecycle, and order recovery behavior (PL-004)
+- [x] T017 [P] Add SLO documentation in specs/001-plataforma-inversiones-ia/plan.md and backend/src/config/README explaining rate limiting thresholds, availability goals, and recovery expectations (PL-007)
 
 ---
 
