@@ -44,8 +44,8 @@
 
 **Independent Test**: Create a signal, verify it stores confidence, source cores, and rationale, and retrieve it through a backend endpoint or log query.
 
-- [ ] T013 [US2] Implement a signal creation flow in backend/src/controllers/signal-controller.ts and backend/src/routes/signal-routes.ts that stores explainability metadata and lifecycle state (PL-011) [FR-008]
-- [ ] T014 [US2] Implement signal expiration and archival behavior in backend/src/services/signal-service.ts, ensuring signals can expire by `expiresAt` and remain audit-traceable (PL-012) [FR-008]
+- [x] T013 [US2] Implement a signal creation flow in backend/src/controllers/signal-controller.ts and backend/src/routes/signal-routes.ts that stores explainability metadata and lifecycle state (PL-011) [FR-008]
+- [x] T014 [US2] Implement signal expiration and archival behavior in backend/src/services/signal-service.ts, ensuring signals can expire by `expiresAt` and remain audit-traceable (PL-012) [FR-008]
 
 ---
 
